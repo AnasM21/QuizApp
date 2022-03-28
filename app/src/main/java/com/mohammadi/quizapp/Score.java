@@ -28,7 +28,7 @@ public class Score extends AppCompatActivity {
         Intent intent=getIntent();
         score=intent.getIntExtra("score",0) ;
         donut_progress.setDonut_progress((100*score/5)+"");
-        //Toast.makeText(getApplicationContext(),score+"",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),score+"",Toast.LENGTH_SHORT).show();
         bLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

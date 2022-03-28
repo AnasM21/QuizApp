@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mohammadi.quizapp.Common.Commen;
@@ -23,6 +24,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
+    private FirebaseAuth mAuth;
+
 
     //Step 1: Declaration
     EditText etLogin, etPassword;
@@ -38,17 +41,38 @@ public class Login extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
         bLogin = (Button) findViewById(R.id.bLogin);
         tvRegister = (TextView) findViewById(R.id.tvRegister);
+        mAuth = FirebaseAuth.getInstance();
+
         //Step 3: Association de listeners
         bLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Step 4: Traitement
-                if (etLogin.getText().toString().equals("toto") && etPassword.getText().toString().equals("123")){
+               /* if (etLogin.getText().toString().equals("toto") && etPassword.getText().toString().equals("123")){
                     startActivity(new Intent(Login.this, Quiz1.class));
                 }
                 else {
                     Toast.makeText(getApplicationContext(),"Login or password incorrect !",Toast.LENGTH_SHORT).show();
-                }
+                }*/
+                mAuth.signInWithEmailAndPassword(etLogin.getText().toString(), etPassword.getText().toString())
+                        .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d("TAG", "signInWithEmail:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    startActivity(new Intent(Login.this, Quiz1.class));
+
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w("TAG", "signInWithEmail:failure", task.getException());
+                                    Toast.makeText(Login.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        });
             }
         });
         tvRegister.setOnClickListener(new View.OnClickListener() {
